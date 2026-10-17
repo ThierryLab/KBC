@@ -2,7 +2,9 @@
 layout: guide
 title: "Why Routing Protocols Matter"
 description: "Why static routes break at scale and how dynamic routing protocols keep networks resilient."
+classification: "Network Engineering"
 category: "Networking"
+subcategory: "General"
 difficulty: "Beginner"
 read_time: "5 min"
 last_updated: "October 2026"

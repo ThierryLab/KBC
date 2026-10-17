@@ -2,7 +2,9 @@
 layout: guide
 title: "IS-IS vs OSPF: The Ultimate Dogfight"
 description: "An architectural showdown between IS-IS and OSPF link-state interior gateway protocols, covering mechanics, scalability, and design trade-offs."
+classification: "Network Engineering"
 category: "Networking"
+subcategory: "General"
 difficulty: "Intermediate"
 read_time: "8 min"
 last_updated: "October 2026"

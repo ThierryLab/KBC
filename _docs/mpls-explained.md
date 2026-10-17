@@ -2,7 +2,9 @@
 layout: guide
 title: "MPLS Explained: Forwarding on Labels Instead of Lookups"
 description: "How MPLS swaps labels instead of routing on IP addresses, what the routers along a label-switched path actually do, and why providers built their backbones on it."
+classification: "Network Engineering"
 category: "Networking"
+subcategory: "General"
 difficulty: "Intermediate"
 read_time: "6 min"
 last_updated: "October 2026"
