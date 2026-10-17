@@ -46,7 +46,7 @@ So "Algo 128 = minimize delay" and "Algo 129 = IGP metric, but never touch links
 Think of it like a navigation app. Algorithm 0 is "shortest distance". Flex-Algo lets you add "fastest route" and "avoid toll roads" as extra options, and every router in the network runs the same options and gets the same answer.
 
 
-<img width="3092" height="1612" alt="image" src="https://github.com/user-attachments/assets/a43bd2a9-f25d-45fd-98c9-16098fcfd4cb" />
+<img width="441" height="230" alt="image" src="https://github.com/user-attachments/assets/a43bd2a9-f25d-45fd-98c9-16098fcfd4cb" />
 
 
 ```text
