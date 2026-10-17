@@ -45,19 +45,9 @@ So "Algo 128 = minimize delay" and "Algo 129 = IGP metric, but never touch links
 
 Think of it like a navigation app. Algorithm 0 is "shortest distance". Flex-Algo lets you add "fastest route" and "avoid toll roads" as extra options, and every router in the network runs the same options and gets the same answer.
 
-
-<img width="441" height="230" alt="image" src="https://github.com/user-attachments/assets/a43bd2a9-f25d-45fd-98c9-16098fcfd4cb" />
-
-
-```text
-          metric 10, delay 20 ms        metric 10, delay 20 ms
-      +------------------------> P1 ------------------------+
-      |                                                     v
-     PE1                                                   PE2
-      |                                                     ^
-      +------------------------> P2 ------------------------+
-          metric 30, delay 2 ms         metric 30, delay 2 ms
-```
+<p align="center">
+<img width="618" height="322" alt="Topology - Flexible Algorithm Definition" src="https://github.com/user-attachments/assets/a43bd2a9-f25d-45fd-98c9-16098fcfd4cb" />
+</p>
 
 In this topology, Algo 0 sends PE1 → PE2 traffic via P1 (total metric 20). A Flex-Algo with `metric-type delay` sends it via P2 (total delay 4 ms). Same routers, same IGP, two different shortest paths, and each one gets its own label.
 
