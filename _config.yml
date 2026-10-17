@@ -1,5 +1,5 @@
 # _config.yml - Jekyll Documentation Site Configuration
-title: " Knowledge Base Center"
+title: " Knowledge Center"
 description: "Your go-to powerhouse for instant guides, articles, tutorials, troubleshooting tips  and more."
 author: "DC Engineering"
 url: "https://ThierryLab.github.io"
@@ -7,8 +7,8 @@ baseurl: "/KBC"
 github_url: "https://github.com/ThierryLab/KBC"
 
 # Branding (leave brand_tag empty to hide the badge next to the title)
-brand_icon: "Knowledge Center"
-brand_tag: "Blog"
+brand_icon: "KBC"
+brand_tag: "Articles"
 
 # Classifications: top-level sections shown in the header nav. Each guide picks one with
 # `classification:` in its front matter (guides without it use the default set below).
