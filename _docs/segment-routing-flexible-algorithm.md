@@ -207,6 +207,7 @@ router isis RD2
 performance-measurement
  interface GigabitEthernet0/0/0/0
   delay-measurement
+   advertise-delay 100
 ```
 
 > **TODO:** verify Performance Measurement syntax and whether static delay values are an option on your platform.
