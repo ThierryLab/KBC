@@ -1,6 +1,6 @@
 ---
 layout: guide
-title: "Segment Routing Flexible Algorithm: Custom Shortest Paths Without SR-TE Policies"
+title: "Segment Routing Flexible Algorithm: Custom Shortest Paths"
 description: "How Flex-Algo lets the IGP compute extra, purpose-built topologies (low-delay, avoid-these-links, and so on) and give each one its own Prefix-SID."
 classification: "Network Engineering"
 category: "Networking"
