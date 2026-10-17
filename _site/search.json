@@ -1,0 +1,138 @@
+[{
+    "title": "Authentication & Token Security",
+    "url": "/test001/docs/authentication-security/",
+    "classification": "Docs",
+    "category": "Security & Governance",
+    "subcategory": "Access Control",
+    "description": "Public-key cryptography, JWT verification, token rotation strategies, and security best practices.",
+    "tags": ["Security","JWT","Encryption"]
+  },{
+    "title": "Data Privacy & Encryption at Rest",
+    "url": "/test001/docs/data-privacy-encryption/",
+    "classification": "Docs",
+    "category": "Security & Governance",
+    "subcategory": "Compliance",
+    "description": "Enterprise data compliance, AES-256-GCM encryption, envelope key hierarchies, and audit logging standards.",
+    "tags": ["Privacy","Encryption","GDPR"]
+  },{
+    "title": "Sliding Window Rate Limiting",
+    "url": "/test001/docs/rate-limiting-algorithms/",
+    "classification": "Docs",
+    "category": "Security & Governance",
+    "subcategory": "Access Control",
+    "description": "Detailed analysis of distributed rate limiting algorithms, token buckets, and boundary spike mitigation.",
+    "tags": ["RateLimiting","Security","Resilience"]
+  },{
+    "title": "Configuration & Customization",
+    "url": "/test001/docs/configuration-options/",
+    "classification": "Docs",
+    "category": "Core Concepts",
+    "subcategory": "Architecture",
+    "description": "Deep dive into configuration parameters, custom typography tokens, brand color schemes, and search indexing.",
+    "tags": ["Configuration","Theming","SEO"]
+  },{
+    "title": "Typography & Design System",
+    "url": "/test001/docs/typography-design-system/",
+    "classification": "Docs",
+    "category": "Core Concepts",
+    "subcategory": "Design Standards",
+    "description": "Executive typographic guidelines, spatial grid discipline, zero-pill doctrine, and dark mode color balance.",
+    "tags": ["Typography","Design System","Accessibility"]
+  },{
+    "title": "Interactive Navigation Tree & Quick Controls",
+    "url": "/test001/docs/interactive-navigation-tree/",
+    "classification": "Docs",
+    "category": "Getting Started",
+    "subcategory": "Project Structure",
+    "description": "Configure your documentation page name in docs.config.ts and test the interactive quick control navigation tree.",
+    "tags": ["Navigation Tree","Quick Controls","Config File","Interactive Testing"]
+  },{
+    "title": "Introduction & Core Architecture",
+    "url": "/test001/docs/introduction/",
+    "classification": "Docs",
+    "category": "Getting Started",
+    "subcategory": "Fundamentals",
+    "description": "Understand the core design philosophy, execution pipeline, and structural paradigms behind DocuCraft.",
+    "tags": ["Architecture","Overview","Design Principles"]
+  },{
+    "title": "Project Structure & Files",
+    "url": "/test001/docs/project-structure/",
+    "classification": "Docs",
+    "category": "Getting Started",
+    "subcategory": "Project Structure",
+    "description": "Learn how to structure multi-chapter technical documentation, assets, navigation definitions, and layout components.",
+    "tags": ["Organization","Architecture","Folders"]
+  },{
+    "title": "Quickstart & Installation",
+    "url": "/test001/docs/quickstart-installation/",
+    "classification": "Docs",
+    "category": "Getting Started",
+    "subcategory": "Fundamentals",
+    "description": "Get up and running with DocuCraft in less than two minutes across npm, pnpm, yarn, or direct HTML export.",
+    "tags": ["Installation","CLI","Quickstart"]
+  },{
+    "title": "IPSec Architecture - test001",
+    "url": "/test001/docs/net/",
+    "classification": "Docs",
+    "category": "NET SEC",
+    "subcategory": "Fundamentals",
+    "description": "Descripe key IPSec architecture",
+    "tags": ["Architecture","Overview","Design Principles"]
+  },{
+    "title": "GitHub Pages & Continuous Integration",
+    "url": "/test001/docs/production-deployment/",
+    "classification": "Docs",
+    "category": "Deployment & Operations",
+    "subcategory": "GitHub Pages",
+    "description": "Comprehensive guide to zero-downtime GitHub Actions deployments, branch publishing, and automated builds.",
+    "tags": ["Deployment","GitHubPages","CI/CD"]
+  },{
+    "title": "REST & RPC API Reference",
+    "url": "/test001/docs/api-reference/",
+    "classification": "API",
+    "category": "API Reference",
+    "subcategory": "REST Endpoints",
+    "description": "Complete specification of developer endpoints, request validation schemas, and standard error envelopes.",
+    "tags": ["API","Endpoints","Schemas"]
+  },{
+    "title": "Request Validation & Payloads",
+    "url": "/test001/docs/request-validation/",
+    "classification": "API",
+    "category": "API Reference",
+    "subcategory": "REST Endpoints",
+    "description": "Strict JSON schema definitions, field constraints, header specifications, and boundary rules.",
+    "tags": ["Validation","Schemas","JSON"]
+  },{
+    "title": "Real-Time Events & WebSockets",
+    "url": "/test001/docs/websocket-realtime-events/",
+    "classification": "API",
+    "category": "API Reference",
+    "subcategory": "Streaming Protocols",
+    "description": "Bi-directional WebSocket protocol for real-time document change subscription and live cluster metrics.",
+    "tags": ["WebSocket","Streaming","Protocols"]
+  },{
+    "title": "Custom Domains, SSL & DNS",
+    "url": "/test001/docs/custom-domain-setup/",
+    "classification": "cat101",
+    "category": "Deployment & Operations",
+    "subcategory": "GitHub Pages",
+    "description": "Configure custom domains like docs.yourcompany.com with automatic Let’s Encrypt SSL and CDN acceleration.",
+    "tags": ["DNS","CustomDomain","SSL"]
+  },{
+    "title": "Standalone Static Web Export",
+    "url": "/test001/docs/standalone-static-export/",
+    "classification": "cat101",
+    "category": "Deployment & Operations",
+    "subcategory": "Static Bundles",
+    "description": "How to build and distribute pure, zero-dependency HTML/CSS/JS bundles for internal intranet or air-gapped systems.",
+    "tags": ["StaticExport","ZeroLockin","Offline"]
+  },{
+    "title": "Execution Pipeline & Lifecycle",
+    "url": "/test001/docs/pipeline-execution/",
+    "classification": "cat101",
+    "category": "Core Concepts",
+    "subcategory": "Architecture",
+    "description": "Explore the request lifecycle, caching layers, middleware hooks, and AST tokenization pipeline.",
+    "tags": ["Pipeline","Lifecycle","Middleware"]
+  },null
+]

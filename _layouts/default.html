@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include head.html %}
+{% assign show_sidebar = true %}{% if page.sidebar == false %}{% assign show_sidebar = false %}{% endif %}
+<body id="top" class="{% if show_sidebar %}has-sidebar{% else %}no-sidebar{% endif %}" data-search-url="{{ '/search.json' | relative_url }}">
+  <a class="skip-link" href="#main">Skip to content</a>
+  {% include header.html sidebar=show_sidebar %}
+  <div class="app-frame">
+    {% if show_sidebar %}{% include sidebar.html %}{% endif %}
+    {% if page.layout == 'guide' %}
+      {{ content }}
+    {% else %}
+      <main class="page-main" id="main">{{ content }}</main>
+    {% endif %}
+  </div>
+  {% include footer.html %}
+  {% include search-modal.html %}
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-rust.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="{{ '/assets/js/main.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+</body>
+</html>

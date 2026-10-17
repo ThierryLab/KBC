@@ -1,0 +1,11 @@
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="{{ '/' | relative_url }}">Home</a></li>
+    {% if page.classification %}
+      {% include class-first-doc.html name=page.classification %}
+      <li><a href="{{ class_first_doc.url | relative_url }}">{{ page.classification }}</a></li>
+    {% endif %}
+    {% if page.category %}<li><span>{{ page.category }}</span></li>{% endif %}
+    {% if page.subcategory %}<li><span>{{ page.subcategory }}</span></li>{% endif %}
+  </ol>
+</nav>

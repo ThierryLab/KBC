@@ -1,0 +1,86 @@
+<nav class="sidebar" id="sidebar" aria-label="Documentation">
+  {% include classifications.html %}
+  {% if doc_classes.size > 1 %}
+  <div class="sidebar-classes" aria-label="Sections">
+    {% for cls in doc_classes %}
+      {% include class-first-doc.html name=cls %}
+      {% if class_first_doc %}<a href="{{ class_first_doc.url | relative_url }}" class="sidebar-class-link{% if page.classification == cls %} active{% endif %}">{{ cls }}</a>{% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+  <div class="tree-controls-bar">
+    <div class="tree-filter-box">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd"/></svg>
+      <input type="text" id="treeFilterInput" class="tree-filter-input" placeholder="Filter guides…" autocomplete="off" spellcheck="false" aria-label="Filter guides">
+      <button type="button" id="treeFilterClear" class="tree-clear-btn" title="Clear filter" aria-label="Clear filter" hidden>✕</button>
+    </div>
+    <div class="tree-action-buttons">
+      <button type="button" class="tree-action-btn" id="treeExpandAll" title="Expand all">Expand</button>
+      <button type="button" class="tree-action-btn" id="treeCollapseAll" title="Collapse all">Collapse</button>
+      <button type="button" class="tree-action-btn" id="treeDensityBtn" title="Toggle compact density">Compact</button>
+    </div>
+  </div>
+
+  <div id="treeContainer">
+    {% if page.classification %}
+      {% assign nav_docs = site.docs | where: "classification", page.classification %}
+      <div class="sidebar-section-title">{{ page.classification }}</div>
+    {% else %}
+      {% assign nav_docs = site.docs %}
+    {% endif %}
+    {% assign doc_groups = nav_docs | group_by: "category" %}
+    {% for group in doc_groups %}
+      {% assign cat_id = group.name | default: "general" | slugify %}
+      {% assign has_active = false %}
+      {% for doc in group.items %}{% if page.url == doc.url %}{% assign has_active = true %}{% endif %}{% endfor %}
+      <div class="tree-category is-expanded{% if has_active %} is-active-branch{% endif %}" id="cat-{{ cat_id }}">
+        <button type="button" class="tree-category-header" data-toggle-tree aria-expanded="true">
+          <svg class="chevron-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/></svg>
+          <span class="category-title">{{ group.name | default: "General Guides" }}</span>
+          <span class="category-count">{{ group.items.size }}</span>
+        </button>
+        <ul class="tree-category-items">
+          {% assign sub_groups = group.items | group_by: "subcategory" %}
+          {% for sub in sub_groups %}
+            {% if sub.name != "" and sub.name != nil %}
+              {% assign sub_id = cat_id | append: "-" | append: sub.name | slugify %}
+              {% assign sub_has_active = false %}
+              {% for doc in sub.items %}{% if page.url == doc.url %}{% assign sub_has_active = true %}{% endif %}{% endfor %}
+              <li class="tree-subcategory-node">
+                <div class="tree-subcategory is-expanded{% if sub_has_active %} is-active-sub{% endif %}" id="subcat-{{ sub_id }}">
+                  <button type="button" class="tree-subcategory-header" data-toggle-tree aria-expanded="true">
+                    <svg class="chevron-icon sub-chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/></svg>
+                    <span class="subcategory-title">{{ sub.name }}</span>
+                  </button>
+                  <ul class="tree-subcategory-items">
+                    {% for doc in sub.items %}
+                      <li class="tree-item" data-title="{{ doc.title | downcase | escape }}" data-category="{{ group.name | downcase | escape }}" data-subcategory="{{ sub.name | downcase | escape }}">
+                        <a href="{{ doc.url | relative_url }}" class="tree-doc-link{% if page.url == doc.url %} active{% endif %}"{% if page.url == doc.url %} aria-current="page"{% endif %}>
+                          <span class="tree-doc-text">{{ doc.title }}</span>
+                        </a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </li>
+            {% else %}
+              {% for doc in sub.items %}
+                <li class="tree-item" data-title="{{ doc.title | downcase | escape }}" data-category="{{ group.name | downcase | escape }}">
+                  <a href="{{ doc.url | relative_url }}" class="tree-doc-link{% if page.url == doc.url %} active{% endif %}"{% if page.url == doc.url %} aria-current="page"{% endif %}>
+                    <span class="tree-doc-text">{{ doc.title }}</span>
+                  </a>
+                </li>
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+    <div id="treeEmptyState" class="tree-empty-state" hidden>
+      <p>No guides match “<span id="emptyQueryTerm"></span>”</p>
+      <button type="button" class="btn btn-sm btn-primary" id="treeResetFilter">Reset filter</button>
+    </div>
+  </div>
+</nav>
+<div class="sidebar-resizer" id="sidebarResizer" role="separator" aria-orientation="vertical" aria-label="Resize navigation" title="Drag to resize · double-click to reset"></div>
+<div class="sidebar-backdrop" id="sidebarBackdrop" hidden></div>

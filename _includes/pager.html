@@ -1,0 +1,44 @@
+{% assign prev_doc = nil %}
+{% assign next_doc = nil %}
+{% assign found_current = false %}
+{% if page.classification %}
+  {% assign pager_docs = site.docs | where: "classification", page.classification %}
+{% else %}
+  {% assign pager_docs = site.docs %}
+{% endif %}
+{% assign pager_groups = pager_docs | group_by: "category" %}
+{% for cat_group in pager_groups %}
+  {% assign pager_subs = cat_group.items | group_by: "subcategory" %}
+  {% for sub_group in pager_subs %}
+    {% for d in sub_group.items %}
+      {% if d.url == page.url %}
+        {% assign found_current = true %}
+      {% elsif found_current == false %}
+        {% assign prev_doc = d %}
+      {% elsif next_doc == nil %}
+        {% assign next_doc = d %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+{% endfor %}
+
+{% if prev_doc or next_doc %}
+<nav class="guide-pager" aria-label="Guide pagination">
+  {% if prev_doc %}
+    <a href="{{ prev_doc.url | relative_url }}" class="pager-card pager-prev" rel="prev">
+      <span class="pager-direction">← Previous</span>
+      <span class="pager-title">{{ prev_doc.title }}</span>
+      <span class="pager-context">{{ prev_doc.category }}{% if prev_doc.subcategory %} › {{ prev_doc.subcategory }}{% endif %}</span>
+    </a>
+  {% else %}
+    <span></span>
+  {% endif %}
+  {% if next_doc %}
+    <a href="{{ next_doc.url | relative_url }}" class="pager-card pager-next" rel="next">
+      <span class="pager-direction">Next →</span>
+      <span class="pager-title">{{ next_doc.title }}</span>
+      <span class="pager-context">{{ next_doc.category }}{% if next_doc.subcategory %} › {{ next_doc.subcategory }}{% endif %}</span>
+    </a>
+  {% endif %}
+</nav>
+{% endif %}

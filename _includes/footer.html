@@ -1,0 +1,49 @@
+{% assign show_footer = page.show_footer | default: site.show_footer %}
+{% if show_footer != false %}
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-grid">
+      <div class="footer-col footer-brand-col">
+        <a href="{{ '/' | relative_url }}" class="brand">
+          {% if site.brand_icon != "" %}<span class="brand-icon">{{ site.brand_icon | default: "D" }}</span>{% endif %}
+          <span class="brand-title">{{ site.title | default: "THE DOC MASTER" }}</span>
+        </a>
+        <p class="footer-desc">{{ site.description }}</p>
+      </div>
+
+      {% include classifications.html %}
+      {% assign footer_max = site.footer_max_sections | default: 6 %}
+      <div class="footer-col">
+        <h4 class="footer-col-title">Sections</h4>
+        <ul class="footer-link-list">
+          {% for cls in doc_classes limit: footer_max %}
+            {% include class-first-doc.html name=cls %}
+            {% if class_first_doc %}<li><a href="{{ class_first_doc.url | relative_url }}" title="{{ cls | escape }}">{{ cls }}</a></li>{% endif %}
+          {% endfor %}
+          {% if doc_classes.size > footer_max %}
+            <li><a href="{{ '/' | relative_url }}" class="footer-more-link">All {{ doc_classes.size }} sections →</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-col-title">Resources</h4>
+        <ul class="footer-link-list">
+          {% for link in site.footer_links %}
+            {% if link.url contains '://' %}
+              <li><a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.title }} ↗</a></li>
+            {% else %}
+              <li><a href="{{ link.url | relative_url }}">{{ link.title }}</a></li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom-bar">
+      <span>{{ site.footer_text | default: "© THE DOC MASTER" }}</span>
+      <a href="#top" class="footer-top-link" data-scroll-top>Back to top ↑</a>
+    </div>
+  </div>
+</footer>
+{% endif %}

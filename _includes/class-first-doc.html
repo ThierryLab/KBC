@@ -1,0 +1,5 @@
+{%- comment -%}Sets `class_first_doc`: first guide (sidebar order) of classification `include.name`.{%- endcomment -%}
+{%- assign cfd_docs = site.docs | where: "classification", include.name -%}
+{%- assign cfd_group = cfd_docs | group_by: "category" | first -%}
+{%- assign cfd_sub = cfd_group.items | group_by: "subcategory" | first -%}
+{%- assign class_first_doc = cfd_sub.items | first -%}

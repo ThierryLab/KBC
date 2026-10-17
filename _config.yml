@@ -1,0 +1,73 @@
+# _config.yml - Jekyll Documentation Site Configuration
+title: " Knowledge Base Center"
+description: "Your go-to powerhouse for instant guides, articles, tutorials, troubleshooting tips  and more."
+author: "DC Engineering"
+url: "https://ThierryLab.github.io"
+baseurl: "/KBC"
+github_url: "https://github.com/ThierryLab/KBC"
+
+# Branding (leave brand_tag empty to hide the badge next to the title)
+brand_icon: "Knowledge Center"
+brand_tag: "Blog"
+
+# Classifications: top-level sections shown in the header nav. Each guide picks one with
+# `classification:` in its front matter (guides without it use the default set below).
+# This list controls the order; classifications not listed are appended automatically.
+classifications:
+  - "General"
+#  - "API"
+#  - "Deploy"
+
+# Extra header links shown after the classifications (optional; full URLs are used as-is)
+nav_links: []
+
+# Footer Configuration (set show_footer to false to completely hide the footer)
+show_footer: true
+footer_text: "© 2026 Knowledge Base Center. All rights reserved."
+# Max classifications listed in the footer "Sections" column; extras collapse into an "All sections" link.
+footer_max_sections: 6
+footer_links:
+  - title: "Home"
+    url: "/"
+  - title: "Documentation"
+    url: "https://ThierryLab.github.io/KBC"
+  - title: "GitHub"
+    url: "https://github.com/ThierryLab/KBC"
+
+# Build Settings
+# Full rebuilds keep the header/sidebar in sync on every page.
+incremental: false
+markdown: kramdown
+highlighter: rouge
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Collections for Technical Guides
+collections:
+  docs:
+    output: true
+    permalink: /docs/:slug/
+
+defaults:
+  - scope:
+      path: ""
+      type: "docs"
+    values:
+      layout: "guide"
+      classification: "Docs"
+
+# Exclude unnecessary build files and ruby vendor folders
+exclude:
+  - vendor
+  - vendor/bundle
+  - .bundle
+  - node_modules
+  - package.json
+  - package-lock.json
+  - Gemfile.lock
+  - .github
+  - dist

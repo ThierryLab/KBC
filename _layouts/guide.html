@@ -1,0 +1,20 @@
+---
+layout: default
+---
+<main class="content-container" id="main">
+  <article class="article">
+    {% include breadcrumbs.html %}
+    <header class="article-header">
+      <h1>{{ page.title }}</h1>
+      {% if page.description %}<p class="article-lead">{{ page.description }}</p>{% endif %}
+      <div class="article-meta">
+        {% if page.difficulty %}<span class="chip">{{ page.difficulty }}</span>{% endif %}
+        {% if page.read_time %}<span class="chip">{{ page.read_time }} read</span>{% endif %}
+        {% if page.last_updated %}<span class="chip chip-muted">Updated {{ page.last_updated }}</span>{% endif %}
+      </div>
+    </header>
+    <div class="article-body prose" id="articleBody">{{ content }}</div>
+    {% include pager.html %}
+  </article>
+</main>
+{% include toc.html %}

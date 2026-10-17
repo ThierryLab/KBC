@@ -1,0 +1,9 @@
+{%- comment -%}Sets `doc_classes`: classifications actually used by guides, ordered by site.classifications first.{%- endcomment -%}
+{%- assign found_classes = site.docs | map: "classification" | compact | uniq -%}
+{%- assign doc_classes = "" | split: "" -%}
+{%- for cls in site.classifications -%}
+  {%- if found_classes contains cls -%}{%- assign doc_classes = doc_classes | push: cls -%}{%- endif -%}
+{%- endfor -%}
+{%- for cls in found_classes -%}
+  {%- unless doc_classes contains cls -%}{%- assign doc_classes = doc_classes | push: cls -%}{%- endunless -%}
+{%- endfor -%}

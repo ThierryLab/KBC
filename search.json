@@ -1,0 +1,26 @@
+---
+layout: null
+permalink: /search.json
+sitemap: false
+---
+{%- include classifications.html -%}
+[
+{%- for cls in doc_classes -%}
+  {%- assign cls_docs = site.docs | where: "classification", cls -%}
+  {%- assign groups = cls_docs | group_by: "category" -%}
+  {%- for group in groups -%}
+    {%- for doc in group.items -%}
+  {
+    "title": {{ doc.title | jsonify }},
+    "url": {{ doc.url | relative_url | jsonify }},
+    "classification": {{ doc.classification | jsonify }},
+    "category": {{ doc.category | jsonify }},
+    "subcategory": {{ doc.subcategory | jsonify }},
+    "description": {{ doc.description | strip_html | jsonify }},
+    "tags": {{ doc.tags | jsonify }}
+  },
+    {%- endfor -%}
+  {%- endfor -%}
+{%- endfor -%}
+null
+]
