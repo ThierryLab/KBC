@@ -2,14 +2,14 @@
 layout: guide
 title: "2. Your First Static Route"
 slug: "static-routing-first-static-route"
-description: "Write static routes with a next-hop, an exit interface, or both, on Cisco IOS, Junos, and Linux, and know which form to pick."
+description: "Write static routes with a next-hop, an exit interface, or both on Cisco IOS routers, add them on Linux hosts, and know which form to pick."
 classification: "Network Engineering"
 category: "Networking"
 subcategory: "Static Routing"
 difficulty: "Beginner"
 read_time: "7 min"
 last_updated: "October 2026"
-tags: ["Networking", "Routing", "Static Routes", "Cisco IOS", "Junos", "Linux"]
+tags: ["Networking", "Routing", "Static Routes", "Cisco IOS", "Linux"]
 ---
 
 # 2. Your First Static Route
@@ -97,35 +97,33 @@ This is the most explicit form: send traffic out Gi0/0 to `192.0.2.1`. There's n
 | Exit interface only | No | Yes, on Ethernet | Point-to-point links and tunnels |
 | Fully specified | No | No | Most Ethernet links |
 
-## The Same Route on Junos and Linux
+## Static Routes on a Linux Host
 
-### Junos
-
-```text
-set routing-options static route 10.10.0.0/16 next-hop 192.0.2.1
-commit
-```
-
-By default Junos requires a static next-hop to sit on a directly connected subnet. If it isn't, the route stays inactive unless you add the `resolve` option, which turns on recursive resolution explicitly. That's a safer default than IOS, where recursion just happens.
-
-### Linux
+Hosts usually get by with a single default gateway. They need static routes when they have **more than one way out**, like SRV1. Its default route points at BR1 (`10.20.1.1`) through `eth0`, but the management systems in `192.168.0.0/16` must be reached through the out-of-band network on `eth1`. Without a static route, SRV1 would send management traffic out the default gateway, where it doesn't belong.
 
 ```bash
-sudo ip route add 10.10.0.0/16 via 192.0.2.1 dev eth0
+sudo ip route add 192.168.0.0/16 via 192.168.50.1 dev eth1
 ```
 
-Including `dev` gives you the fully specified form. Routes added with `ip route` disappear at reboot. Make them persistent in your network configuration tool. With Netplan:
+Including `dev` gives you the fully specified form. Routes added with `ip route` disappear at reboot, so make them persistent in your network configuration tool. With Netplan:
 
 ```yaml
 network:
   version: 2
   ethernets:
     eth0:
-      addresses: [192.0.2.2/30]
+      addresses: [10.20.1.10/24]
       routes:
-        - to: 10.10.0.0/16
-          via: 192.0.2.1
+        - to: default
+          via: 10.20.1.1
+    eth1:
+      addresses: [192.168.50.10/24]
+      routes:
+        - to: 192.168.0.0/16
+          via: 192.168.50.1
 ```
+
+Note that `eth1` has **no** default route. A host with two default routes is the host-side version of the ECMP trap from [chapter 3]({{ '/docs/static-routing-default-routes/' | relative_url }}).
 
 Then apply it with `sudo netplan apply`. If the box uses NetworkManager or systemd-networkd directly, use their route settings instead. Don't mix tools that fight over the same interface.
 

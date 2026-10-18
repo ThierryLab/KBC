@@ -21,13 +21,13 @@ This course takes you from "what does `ip route` actually do?" to designing stat
 ## Who This Course Is For
 
 - Junior network engineers who configure static routes but want to know exactly what the router does with them.
-- Sysadmins and cloud engineers who manage Linux routing tables and want vendor-neutral fundamentals.
+- Sysadmins and cloud engineers who manage routing tables on multi-homed Linux servers.
 - Anyone preparing to run branch or edge networks where static routing is still the right tool.
 
 ## Prerequisites
 
 - IPv4 addressing and subnetting (prefixes, masks, CIDR notation).
-- Basic CLI comfort on at least one platform (Cisco IOS, Junos, or Linux).
+- Basic CLI comfort with Cisco IOS (router examples) and Linux (host examples).
 - Helpful but optional: [Why Routing Protocols Matter]({{ '/docs/importance-of-routing-protocols/' | relative_url }}) for the bigger picture of static vs dynamic routing.
 
 ## What You'll Learn
@@ -43,7 +43,7 @@ This course takes you from "what does `ip route` actually do?" to designing stat
 ## Syllabus
 
 1. [How a Router Chooses a Path]({{ '/docs/static-routing-forwarding-basics/' | relative_url }}): the routing table, connected routes, and longest-prefix match.
-2. [Your First Static Route]({{ '/docs/static-routing-first-static-route/' | relative_url }}): next-hop, exit-interface, and fully specified routes on IOS, Junos, and Linux.
+2. [Your First Static Route]({{ '/docs/static-routing-first-static-route/' | relative_url }}): next-hop, exit-interface, and fully specified routes on Cisco IOS, plus static routes on a Linux host.
 3. [Default Routes and Stub Networks]({{ '/docs/static-routing-default-routes/' | relative_url }}): the gateway of last resort and why branches love it.
 4. [Administrative Distance and Floating Static Routes]({{ '/docs/static-routing-floating-routes/' | relative_url }}): ranking route sources and building a backup path.
 5. [Making Static Routes Detect Failures]({{ '/docs/static-routing-route-tracking/' | relative_url }}): IP SLA object tracking and BFD for static routes.
@@ -56,7 +56,9 @@ This course takes you from "what does `ip route` actually do?" to designing stat
 
 Each chapter takes 5 to 9 minutes to read. Chapters 1 to 3 are the foundation; if you already know longest-prefix match and default routes cold, skim them and start at chapter 4. Chapters 4 to 6 are where most production mistakes happen, so read them carefully.
 
-The examples use one small lab all the way through: a branch router, an HQ router, and two internet uplinks. Rebuild it in a lab tool such as Containerlab, GNS3, or EVE-NG and type the configs yourself. Watching `show ip route` change after each command teaches more than reading about it.
+The examples use one small lab all the way through: a branch router, an HQ router, two internet uplinks, and a Linux server. Router configs are Cisco IOS; host configs are Linux. Rebuild it in a lab tool such as Containerlab, GNS3, or EVE-NG and type the configs yourself. Watching `show ip route` change after each command teaches more than reading about it.
+
+![Course lab topology with routers BR1 and HQ1, the branch and HQ LANs, ISP-A and ISP-B uplinks, and Linux server SRV1]({{ '/assets/diagrams/static-routing-lab.drawio.svg' | relative_url }})
 
 ---
 

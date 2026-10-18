@@ -26,7 +26,7 @@ That makes it the "everything else" route: specific routes handle what they know
 
 A **stub network** has exactly one path to the rest of the world. Branch offices, small sites, a lab, a home network: if every non-local packet leaves through the same link, there's no routing decision to make. A default route expresses that perfectly, and it's why stub sites are where static routing shines.
 
-## Hands-On: Defaults for BR1 and HQ1
+## Hands-On: Defaults for BR1, HQ1, and SRV1
 
 ### BR1: Everything Goes to HQ
 
@@ -56,17 +56,15 @@ HQ1(config)# ip route 0.0.0.0 0.0.0.0 GigabitEthernet0/2 203.0.113.1 name DEFAUL
 
 HQ1 still needs its specific route back to the branch (`10.20.1.0/24` via `192.0.2.2`). The default can't replace it, because the branch is *not* behind ISP-A.
 
-### Junos and Linux
+### SRV1: The Host's Default Gateway
 
-```text
-set routing-options static route 0.0.0.0/0 next-hop 203.0.113.1
-```
+On a host, the default route *is* the "default gateway" setting. SRV1's points at BR1's LAN address:
 
 ```bash
-sudo ip route add default via 203.0.113.1 dev eth2
+sudo ip route add default via 10.20.1.1 dev eth0
 ```
 
-On Linux, `default` is shorthand for `0.0.0.0/0`.
+On Linux, `default` is shorthand for `0.0.0.0/0`. To make it permanent, use `- to: default` under `routes:` in Netplan, as in [chapter 2]({{ '/docs/static-routing-first-static-route/' | relative_url }}).
 
 ## Two Defaults at Once
 
@@ -79,13 +77,7 @@ HQ1(config)# ip route 0.0.0.0 0.0.0.0 GigabitEthernet0/3 198.51.100.1
 
 Both get installed and the router load-shares across them (ECMP), hashing each flow onto one link. With two different ISPs that's usually **not** what you want: each ISP only accepts your traffic from the addresses it assigned you, so you'd need NAT per link, and stateful firewalls hate the asymmetric return traffic. For a primary/backup design, use a floating route instead (next chapter).
 
-On Linux, adding a second default with the same metric fails with `RTNETLINK answers: File exists`. Multipath has to be explicit:
-
-```bash
-sudo ip route replace default \
-  nexthop via 203.0.113.1 dev eth2 \
-  nexthop via 198.51.100.1 dev eth3
-```
+Hosts hit the same problem from another angle. If SRV1 picked up a second default route on `eth1` (a DHCP server on the management network is the usual culprit), some of its internet traffic would leave through the management network. Adding a second default with the same metric by hand fails with `RTNETLINK answers: File exists`; a DHCP-learned one typically arrives with a different metric and quietly wins or loses. Either way, check `ip route show default` on multi-homed hosts and keep exactly one default.
 
 ## Gotchas and Edge Cases
 

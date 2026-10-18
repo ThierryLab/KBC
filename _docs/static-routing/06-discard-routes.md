@@ -18,7 +18,7 @@ With [chapter 5]({{ '/docs/static-routing-route-tracking/' | relative_url }}) do
 
 ## The Core Concept: A Route to Nowhere
 
-A **discard route** matches a prefix like any other route, but instead of a next-hop it points at a sink: `Null0` on Cisco, `discard` or `reject` on Junos, `blackhole` on Linux. Matching packets are dropped right there.
+A **discard route** matches a prefix like any other route, but instead of a next-hop it points at a sink: `Null0` on Cisco routers, `blackhole` (and friends) on Linux hosts. Matching packets are dropped right there.
 
 Why would you want that? Because of longest-prefix match. A discard route for a broad prefix catches only the traffic that **no more specific route** claims. Real subnets keep working, and everything else inside the range is dropped locally instead of falling through to the default route.
 
@@ -75,26 +75,17 @@ When you advertise a summary (one route for many subnets) to another router, you
 
 Routing protocols do this for you in some cases. EIGRP installs a Null0 route when you configure a summary, and IOS OSPF installs a discard route for summaries created with `area range` or `summary-address`. With static routing you do it yourself, and in [chapter 8]({{ '/docs/static-routing-with-dynamic-routing/' | relative_url }}) you'll use exactly this pattern to originate a stable BGP aggregate.
 
-## Junos and Linux
+## Discard Routes on a Linux Host
 
-Junos gives you two flavors:
-
-```text
-set routing-options static route 10.20.0.0/16 discard
-set routing-options static route 10.30.0.0/16 reject
-```
-
-`discard` drops silently. `reject` drops and sends an ICMP unreachable. Prefer `discard` on anything internet-facing.
-
-Linux has three:
+Hosts don't summarize anything, but a discard route is still a handy tool on a server: it's the fastest way to stop a box from talking to a destination, for example cutting SRV1 off from a misbehaving API during an incident. Linux has three types:
 
 ```bash
-sudo ip route add blackhole 10.20.0.0/16
-sudo ip route add unreachable 10.30.0.0/16
-sudo ip route add prohibit 10.40.0.0/16
+sudo ip route add blackhole 203.0.113.99/32
+sudo ip route add unreachable 203.0.113.99/32
+sudo ip route add prohibit 203.0.113.99/32
 ```
 
-`blackhole` drops silently; `unreachable` and `prohibit` drop and signal an error (ICMP host unreachable and administratively prohibited, respectively).
+Pick one, not all three; they're alternatives for the same prefix. `blackhole` drops silently, so applications hang until their timeouts fire. `unreachable` and `prohibit` fail immediately with an error (host unreachable and administratively prohibited, respectively), which is usually what you want on a host: the application gives up fast instead of piling up stuck connections. Remove the route with `ip route del` once the incident is over, and use a firewall rule if the block needs to stay.
 
 ## Gotchas and Edge Cases
 
@@ -105,10 +96,10 @@ sudo ip route add prohibit 10.40.0.0/16
 
 ## Key Takeaways
 
-- Discard routes (Null0, `discard`, `blackhole`) drop matching traffic locally.
+- Discard routes (Null0 on routers, `blackhole`/`unreachable` on Linux hosts) drop matching traffic locally.
 - Because of longest-prefix match, a broad discard route only catches traffic that no specific route claims.
 - Use them to stop summary-plus-default loops and to anchor summaries you advertise.
-- Turn off ICMP unreachables on Null0, or use silent `discard`/`blackhole`, on internet-facing devices.
+- Turn off ICMP unreachables on Null0 on internet-facing routers; on hosts, prefer `unreachable` so applications fail fast.
 
 ---
 

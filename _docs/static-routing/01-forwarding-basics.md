@@ -20,23 +20,13 @@ Before you write a single static route, you need a clear picture of what the rou
 
 One small topology runs through every chapter, so you can keep a single lab running and build on it.
 
-```text
-             10.20.1.0/24                          10.10.0.0/16
-          [Branch LAN]                            [HQ LAN]
-               |                                      |
-           Gi0/1 .1                               Gi0/1 .1
-            +------+   192.0.2.0/30   +------+
-            | BR1  |------------------| HQ1  |
-            +------+ .2 Gi0/0  Gi0/0 .1 +------+
-                                     Gi0/2 |    | Gi0/3
-                              203.0.113.2/30    198.51.100.2/29
-                                         |       |
-                                     [ISP-A]   [ISP-B / LTE]
-                                  203.0.113.1  198.51.100.1
-```
+![Course lab topology: BR1 connects the branch LAN 10.20.1.0/24 to HQ1 over 192.0.2.0/30; HQ1 connects the HQ LAN 10.10.0.0/16, ISP-A on Gi0/2 (primary) and ISP-B on Gi0/3 (backup); Linux server SRV1 sits on the branch LAN and on an out-of-band management network 192.168.50.0/24]({{ '/assets/diagrams/static-routing-lab.drawio.svg' | relative_url }})
 
-- **BR1** is a branch router with one LAN and one WAN link to HQ.
-- **HQ1** owns the HQ LAN, the link to the branch, a primary internet uplink (ISP-A), and a cheaper backup (ISP-B).
+- **BR1** is a branch router (Cisco IOS) with one LAN and one WAN link to HQ.
+- **HQ1** (Cisco IOS) owns the HQ LAN, the link to the branch, a primary internet uplink (ISP-A), and a cheaper backup (ISP-B).
+- **SRV1** is a Linux server on the branch LAN (`eth0`, `10.20.1.10`). It also has a second NIC (`eth1`, `192.168.50.10`) on an out-of-band management network whose gateway is `192.168.50.1`. We'll use it whenever a host needs its own static routes.
+
+Router examples use Cisco IOS; host examples use Linux.
 
 All addresses come from private or documentation ranges, so nothing here collides with a real network.
 
@@ -71,12 +61,13 @@ L        192.0.2.2/32 is directly connected, GigabitEthernet0/0
 
 The `C` lines are the subnets BR1 sits on. The `L` lines are the router's own addresses as /32 host routes. BR1 can reach its LAN and HQ1's WAN address, but it has no idea that `10.10.0.0/16` exists. Every packet for HQ gets dropped. That gap is what static routes fill.
 
-On Linux the same idea shows up as `proto kernel scope link` entries:
+Hosts have a routing table too. On SRV1, connected routes show up as `proto kernel scope link` entries, next to the default route it got from DHCP or its network config:
 
 ```bash
 $ ip route
-10.20.1.0/24 dev eth1 proto kernel scope link src 10.20.1.1
-192.0.2.0/30 dev eth0 proto kernel scope link src 192.0.2.2
+default via 10.20.1.1 dev eth0 proto static
+10.20.1.0/24 dev eth0 proto kernel scope link src 10.20.1.10
+192.168.50.0/24 dev eth1 proto kernel scope link src 192.168.50.10
 ```
 
 ## Longest-Prefix Match: The Rule That Beats Everything
@@ -103,7 +94,7 @@ This matters for static routing in a very practical way: **a static /24 beats an
 
 ## Ask the Router, Don't Guess
 
-You don't have to work out longest-prefix match by hand. Every platform will tell you which route it would use for a given destination:
+You don't have to work out longest-prefix match by hand. Both routers and hosts will tell you which route they would use for a given destination:
 
 ```text
 BR1# show ip route 10.10.5.20
@@ -111,10 +102,6 @@ BR1# show ip route 10.10.5.20
 
 ```bash
 $ ip route get 10.10.5.20
-```
-
-```text
-user@hq1> show route 10.10.5.20
 ```
 
 Make this a habit. Before and after every static route change, ask the router which entry it would use for a few real destinations. It's the fastest way to catch a route that's more or less specific than you meant.

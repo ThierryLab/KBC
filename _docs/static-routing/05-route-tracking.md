@@ -93,21 +93,13 @@ HQ1(config)# ip route static bfd GigabitEthernet0/2 203.0.113.1
 HQ1(config)# ip route 0.0.0.0 0.0.0.0 GigabitEthernet0/2 203.0.113.1
 ```
 
-With a 300 ms interval and a multiplier of 3, a dead neighbor is detected in about 900 ms. On Junos:
-
-```text
-set routing-options static route 0.0.0.0/0 next-hop 203.0.113.1
-set routing-options static route 0.0.0.0/0 bfd-liveness-detection minimum-interval 300
-```
+With a 300 ms interval and a multiplier of 3, a dead neighbor is detected in about 900 ms.
 
 The catch is that **both ends must run BFD**. With an ISP, that means asking for it, and many business internet services won't offer it. BFD is more common on links you control: between your own routers, to a firewall cluster, or across a data-center fabric.
 
-## What About Linux?
+## What About Hosts?
 
-The Linux kernel has no built-in route tracking. Common approaches:
-
-- A routing daemon such as FRRouting, which manages static routes and can tie them to BFD sessions. Check the `staticd` documentation for your FRR version.
-- A small health-check service (systemd timer, keepalived script) that pings a target through a specific interface and runs `ip route replace` when the result changes. If you write your own, copy the IOS design: pin the probe with a /32 route and use asymmetric up/down delays.
+The Linux kernel has no built-in route tracking, and you rarely want hosts making failover decisions anyway. If SRV1 needs a gateway that survives a router failure, don't give it two defaults and a health-check script. Put two routers on the LAN and run a first-hop redundancy protocol (HSRP or VRRP on Cisco). They share a virtual gateway IP, and SRV1 keeps its single, boring static default pointing at that address. The routers handle failover; the host never notices.
 
 ## Gotchas and Edge Cases
 

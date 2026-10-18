@@ -18,20 +18,20 @@ At the end of [chapter 3]({{ '/docs/static-routing-default-routes/' | relative_u
 
 ## The Core Concept: Trust Ranking for Route Sources
 
-A router can learn the exact same prefix from several sources: a static route, OSPF, BGP. It needs a way to decide which source to believe. **Administrative distance** (AD) is that ranking: a number per route source, and lower is more trusted. Junos calls it **route preference**, with the same idea and different numbers.
+A router can learn the exact same prefix from several sources: a static route, OSPF, BGP. It needs a way to decide which source to believe. **Administrative distance** (AD) is that ranking: a number per route source, and lower is more trusted. These are the Cisco IOS defaults:
 
-| Source | Cisco IOS AD | Junos preference |
-|---|---|---|
-| Connected / direct | 0 | 0 |
-| Static | 1 | 5 |
-| eBGP | 20 | 170 (BGP) |
-| OSPF internal | 110 | 10 |
-| IS-IS (Level 2 internal) | 115 | 18 |
-| RIP | 120 | 100 |
-| OSPF external | 110 | 150 |
-| iBGP | 200 | 170 (BGP) |
+| Source | Cisco IOS AD |
+|---|---|
+| Connected | 0 |
+| Static | 1 |
+| eBGP | 20 |
+| EIGRP (internal) | 90 |
+| OSPF | 110 |
+| IS-IS | 115 |
+| RIP | 120 |
+| iBGP | 200 |
 
-The two vendors disagree a lot. On IOS, eBGP beats OSPF; on Junos, OSPF internal routes beat BGP. Don't carry AD numbers from one platform to another.
+Other vendors use the same idea with different numbers, so don't carry AD values from one platform to another.
 
 ### The Full Selection Order
 
@@ -41,7 +41,7 @@ Putting [chapter 1]({{ '/docs/static-routing-forwarding-basics/' | relative_url 
 2. **Administrative distance** decides which *source* wins for that exact prefix.
 3. **Metric** decides among routes from the same source.
 
-Linux has no AD concept. It just uses the route `metric`, where lower wins.
+Linux hosts have no AD concept. They just use the route `metric`, where lower wins.
 
 ## Floating Static Routes
 
@@ -75,23 +75,17 @@ S*    0.0.0.0/0 [250/0] via 198.51.100.1, GigabitEthernet0/3
 
 Bring Gi0/2 back up, and the AD-1 route returns and immediately replaces the backup.
 
-### Junos
+### The Same Idea on a Linux Host
 
-```text
-set routing-options static route 0.0.0.0/0 next-hop 203.0.113.1
-set routing-options static route 0.0.0.0/0 qualified-next-hop 198.51.100.1 preference 250
-```
-
-A `qualified-next-hop` lets one static route carry several next-hops, each with its own preference.
-
-### Linux
+You've probably used a floating default without knowing it. A Linux laptop plugged into Ethernet with Wi-Fi also connected has two defaults, and NetworkManager gives them different metrics by device type:
 
 ```bash
-sudo ip route add default via 203.0.113.1 dev eth2 metric 100
-sudo ip route add default via 198.51.100.1 dev eth3 metric 250
+$ ip route show default
+default via 10.20.1.1 dev eth0 proto dhcp metric 100
+default via 172.20.0.1 dev wlan0 proto dhcp metric 600
 ```
 
-Both routes appear in `ip route`, and the lower metric wins.
+The wired route (metric 100) wins. Unplug the cable, the `eth0` route goes away, and the Wi-Fi route takes over. That's a floating default, with metric playing the role of AD. On a server you'd set the metric explicitly, for example `metric: 200` on a Netplan route, or `ip route add ... metric 200`.
 
 ## Backing Up a Dynamic Route
 
@@ -109,13 +103,13 @@ The mistake that bites people: setting a "backup" static to AD 100 behind OSPF. 
 
 - **The backup must have the exact same prefix.** A floating static for `10.10.0.0/17` isn't a backup for a primary `10.10.0.0/16`; it's more specific, so longest-prefix match picks it for half the HQ LAN, whatever its AD.
 - **A floating route only activates when the primary leaves the routing table.** For a static primary, that means its interface went down or its next-hop stopped resolving. If ISP-A's upstream dies but the cable to their router stays up, Gi0/2 stays up, the primary stays installed, and you have an outage with a perfectly good backup sitting unused. This is the biggest weakness of plain static failover, and [chapter 5]({{ '/docs/static-routing-route-tracking/' | relative_url }}) fixes it.
-- **Linux keeps routes on links with no carrier.** When a cable is pulled, Linux marks routes `linkdown` but can keep using them. Set `net.ipv4.conf.all.ignore_routes_with_linkdown=1` if you want failover on carrier loss.
+- **Linux hosts can keep routes on links with no carrier.** When a cable is pulled, Linux marks routes `linkdown` but may keep using them. Set `net.ipv4.conf.all.ignore_routes_with_linkdown=1` if a multi-homed host should fail over on carrier loss.
 - **Failback is instant and automatic.** A flapping primary link flips traffic back and forth every time it bounces. Long-lived sessions (VoIP, VPNs, NAT state) break on every flip. Tracking with delays (next chapter) helps damp this.
 
 ## Key Takeaways
 
 - Selection order: longest prefix, then administrative distance, then metric.
-- Lower AD wins; static routes default to 1 on IOS and 5 on Junos, but you can set any value per route.
+- Lower AD wins; static routes default to AD 1 on IOS, but you can set any value per route. Linux hosts use the route metric instead.
 - A floating static route has a higher AD than the primary and only installs when the primary disappears.
 - To back up a dynamic protocol, the floating static's AD must be higher than that protocol's AD.
 - Plain floating routes only react to local link or next-hop failures, not to failures further upstream.

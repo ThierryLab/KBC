@@ -36,11 +36,13 @@ A packet goes through a fixed sequence of decisions. Work through them in order,
 HQ1# show running-config | include ip route
 ```
 
+On a host such as SRV1, check the persistent config too:
+
 ```bash
-$ grep -rn "routes" /etc/netplan/
+$ grep -rn -A3 "routes:" /etc/netplan/
 ```
 
-Check the prefix *and the mask*. `255.255.255.0` where you meant `255.255.0.0` is still the number one typo ([chapter 2]({{ '/docs/static-routing-first-static-route/' | relative_url }})). On Linux, also check the route survives a reboot: a route added with `ip route add` and never persisted vanishes at the next maintenance window.
+Check the prefix *and the mask*. `255.255.255.0` where you meant `255.255.0.0` is still the number one typo ([chapter 2]({{ '/docs/static-routing-first-static-route/' | relative_url }})). On Linux hosts, also check the route survives a reboot: a route added with `ip route add` and never persisted vanishes at the next maintenance window.
 
 ### 2. Is It Installed?
 
@@ -65,8 +67,10 @@ If the route is configured but missing from the routing table, the cause is almo
 HQ1# show ip route 10.20.1.50
 ```
 
+On SRV1, for example to confirm management traffic really leaves through `eth1`:
+
 ```bash
-$ ip route get 10.20.1.50
+$ ip route get 192.168.10.5
 ```
 
 Your route can be installed and still not be used, because something **more specific** wins ([chapter 1]({{ '/docs/static-routing-forwarding-basics/' | relative_url }})). Look for stray /32s, a discard route that's too narrow, or a more specific prefix learned from a routing protocol.
@@ -85,8 +89,10 @@ The RIB and the FIB should match. If they don't, you're probably looking at a so
 HQ1# show ip arp 192.0.2.2
 ```
 
+On SRV1, check its gateways:
+
 ```bash
-$ ip neigh show 192.0.2.2
+$ ip neigh show 10.20.1.1
 ```
 
 An `Incomplete` ARP entry (`FAILED` or `INCOMPLETE` on Linux) means the router has a route but can't find the neighbor's MAC address: wrong VLAN, wrong subnet mask on one side, a dead neighbor, or a cable in the wrong port. If you see ARP entries for *remote* hosts on an Ethernet interface, you've found an exit-interface-only route relying on proxy ARP.
