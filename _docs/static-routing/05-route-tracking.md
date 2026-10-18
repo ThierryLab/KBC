@@ -103,7 +103,7 @@ The Linux kernel has no built-in route tracking, and you rarely want hosts makin
 
 ## Gotchas and Edge Cases
 
-- **One probe target is a single point of failure.** If that one host goes down or starts rate-limiting ICMP, you fail over while ISP-A is perfectly healthy. Track two targets and combine them, for example `track 3 list boolean or` with `object 1` and `object 2`, so the primary is only withdrawn when both fail.
+- **One probe target is a single point of failure.** If that one host goes down or starts rate-limiting ICMP, you fail over while ISP-A is perfectly healthy. Add a second IP SLA probe to a different target (pinned with its own /32, like step 4) and its own track object, combine both with `track 3 list boolean or` (`object 1` and `object 2`), and attach the primary route to `track 3`. The primary is then only withdrawn when both targets fail.
 - **Failover doesn't preserve sessions.** NAT translations and stateful firewall sessions belong to ISP-A's addresses. After failover, long-lived connections have to reconnect. That's normal; tell the help desk before the first real outage.
 - **Don't combine tracking with `permanent`.** The IOS `permanent` keyword keeps a route installed even when its interface goes down, which defeats the whole point.
 - **BFD timers that are too aggressive cause false failovers.** A busy control plane that misses a few hellos will drop the route. Start conservative (300 ms × 3) and tighten only after watching it under load.

@@ -58,13 +58,13 @@ HQ1 still needs its specific route back to the branch (`10.20.1.0/24` via `192.0
 
 ### SRV1: The Host's Default Gateway
 
-On a host, the default route *is* the "default gateway" setting. SRV1's points at BR1's LAN address:
+On a host, the default route *is* the "default gateway" setting. You already saw SRV1's in chapter 1: it points at BR1's LAN address. Setting it by hand looks like this:
 
 ```bash
-sudo ip route add default via 10.20.1.1 dev eth0
+sudo ip route replace default via 10.20.1.1 dev eth0
 ```
 
-On Linux, `default` is shorthand for `0.0.0.0/0`. To make it permanent, use `- to: default` under `routes:` in Netplan, as in [chapter 2]({{ '/docs/static-routing-first-static-route/' | relative_url }}).
+`replace` adds the route or overwrites an existing default, so it won't fail with `File exists`. On Linux, `default` is shorthand for `0.0.0.0/0`. To make it permanent, use `- to: default` under `routes:` in Netplan, as in [chapter 2]({{ '/docs/static-routing-first-static-route/' | relative_url }}).
 
 ## Two Defaults at Once
 

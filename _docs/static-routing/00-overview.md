@@ -38,6 +38,7 @@ This course takes you from "what does `ip route` actually do?" to designing stat
 - How to make static routes react to real failures with IP SLA tracking and BFD.
 - How to use discard (Null0) routes to stop loops and anchor summaries.
 - How IPv6 static routes differ, especially with link-local next-hops.
+- How to manage static routes on a multi-homed Linux host: extra routes, a single default, metrics, and persistence with Netplan.
 - How to redistribute static routes into OSPF and BGP safely, and how to troubleshoot a broken static route step by step.
 
 ## Syllabus

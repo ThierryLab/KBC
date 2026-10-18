@@ -123,9 +123,9 @@ network:
           via: 192.168.50.1
 ```
 
-Note that `eth1` has **no** default route. A host with two default routes is the host-side version of the ECMP trap from [chapter 3]({{ '/docs/static-routing-default-routes/' | relative_url }}).
-
 Then apply it with `sudo netplan apply`. If the box uses NetworkManager or systemd-networkd directly, use their route settings instead. Don't mix tools that fight over the same interface.
+
+Note that `eth1` has **no** default route. A host with two default routes is the host-side version of the two-defaults trap covered in [chapter 3]({{ '/docs/static-routing-default-routes/' | relative_url }}).
 
 ## Gotchas and Edge Cases
 

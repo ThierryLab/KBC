@@ -52,7 +52,7 @@ Now:
 
 The loop is gone, and when the branch adds `10.20.2.0/24` later, the new connected route automatically wins over the discard.
 
-By default IOS sends an ICMP unreachable for every packet dropped by Null0. Under a scan or a flood, that wastes CPU and confirms to the scanner that you exist. Turn it off:
+By default IOS answers packets dropped by Null0 with ICMP unreachables (rate-limited, but still generated). Under a scan or a flood, that costs CPU and confirms to the scanner that you exist. Turn it off:
 
 ```text
 BR1(config)# interface Null0

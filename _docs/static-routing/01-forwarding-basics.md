@@ -74,7 +74,7 @@ default via 10.20.1.1 dev eth0 proto static
 
 When a packet arrives, the router looks for every route whose prefix contains the destination address, then picks the **most specific** one: the longest prefix length. This is longest-prefix match, and it happens *before* administrative distance or metric are even considered.
 
-Say a router has these routes:
+Say a router (a made-up one, not from our lab) has these routes:
 
 ```text
 0.0.0.0/0       via 203.0.113.1

@@ -48,7 +48,7 @@ HQ1(config-router)# redistribute static subnets route-map STATIC-TO-OSPF
 HQ1(config-router)# default-information originate
 ```
 
-- `subnets` matters on classic IOS: without it, only classful networks are redistributed and your /24 silently disappears. Newer IOS-XE releases include subnets automatically, but writing it explicitly does no harm.
+- `subnets` matters on classic IOS: without it, only classful networks are redistributed and your /24 silently disappears. Some newer IOS and IOS-XE releases add `subnets` automatically, but writing it explicitly does no harm.
 - `default-information originate` advertises a default route into OSPF **only while HQ1 has one in its routing table**. Default routes aren't redistributed by `redistribute static`; they need this separate command.
 
 ### Step 3: Verify from a Core Router
@@ -77,7 +77,7 @@ Redistribution without a filter means you've lost track of what you're advertisi
 
 ## Static Routes Anchor BGP Announcements
 
-Here's an example outside our lab. Picture an edge router in AS 64500 that owns `198.51.100.0/24` (a documentation range) and announces it to its ISPs. The BGP `network` command only advertises a prefix if an **exact match** exists in the routing table. The internal subnets are /26s and /27s, and they come and go with interface states, so tying the announcement to any of them would make the /24 flap.
+Here's an example outside our lab. Picture an edge router in AS 64500 that owns `198.51.100.0/24` and announces it to its ISPs. (Both are documentation values; this has nothing to do with ISP-B's link in our lab, which happens to use the same documentation range.) The BGP `network` command only advertises a prefix if an **exact match** exists in the routing table. The internal subnets are /26s and /27s, and they come and go with interface states, so tying the announcement to any of them would make the /24 flap.
 
 The fix is the discard-route pattern from [chapter 6]({{ '/docs/static-routing-discard-routes/' | relative_url }}):
 
