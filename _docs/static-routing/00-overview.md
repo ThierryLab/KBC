@@ -58,7 +58,7 @@ Each chapter takes 5 to 9 minutes to read. Chapters 1 to 3 are the foundation; i
 
 The examples use one small lab all the way through: a branch router, an HQ router, two internet uplinks, and a Linux server. Router configs are Cisco IOS; host configs are Linux. Rebuild it in a lab tool such as Containerlab, GNS3, or EVE-NG and type the configs yourself. Watching `show ip route` change after each command teaches more than reading about it.
 
-![Course lab topology with routers BR1 and HQ1, the branch and HQ LANs, ISP-A and ISP-B uplinks, and Linux server SRV1]({{ '/assets/diagrams/static-routing-lab.drawio.svg' | relative_url }})
+![Course lab topology with routers BR1 and HQ1, the branch and HQ LANs, ISP-A and ISP-B uplinks, and Linux server SRV1]({{ '/assets/diagrams/static-routing-lab.drawio.png' | relative_url }})
 
 ---
 

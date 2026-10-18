@@ -20,7 +20,7 @@ Before you write a single static route, you need a clear picture of what the rou
 
 One small topology runs through every chapter, so you can keep a single lab running and build on it.
 
-![Course lab topology: BR1 connects the branch LAN 10.20.1.0/24 to HQ1 over 192.0.2.0/30; HQ1 connects the HQ LAN 10.10.0.0/16, ISP-A on Gi0/2 (primary) and ISP-B on Gi0/3 (backup); Linux server SRV1 sits on the branch LAN and on an out-of-band management network 192.168.50.0/24]({{ '/assets/diagrams/static-routing-lab.drawio.svg' | relative_url }})
+![Course lab topology: BR1 connects the branch LAN 10.20.1.0/24 to HQ1 over 192.0.2.0/30; HQ1 connects the HQ LAN 10.10.0.0/16, ISP-A on Gi0/2 (primary) and ISP-B on Gi0/3 (backup); Linux server SRV1 sits on the branch LAN and on an out-of-band management network 192.168.50.0/24]({{ '/assets/diagrams/static-routing-lab.drawio.png' | relative_url }})
 
 - **BR1** is a branch router (Cisco IOS) with one LAN and one WAN link to HQ.
 - **HQ1** (Cisco IOS) owns the HQ LAN, the link to the branch, a primary internet uplink (ISP-A), and a cheaper backup (ISP-B).
