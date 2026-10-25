@@ -23,7 +23,7 @@ Every engineer starts with static routes. You configure `ip route 10.2.0.0/24 19
 
 Static routing fails for three practical reasons:
 
-1. **Configuration scaling is brutal:** In a mesh of $N$ routers, static paths require $O(N^2)$ definitions. Add a subnet, and you must reconfigure nearly every router.
+1. **Configuration scaling is brutal:** In a mesh of *N* routers, static paths require O(N<sup>2</sup>) definitions. Add a subnet, and you must reconfigure nearly every router.
 2. **Zero failure awareness:** A static route points to an IP address or interface. If an upstream carrier link drops three hops away, your local interface stays up. Your router keeps shoving packets down a dead path, silently dropping traffic into a black hole.
 3. **No automatic recovery:** When an outage happens at 2 AM, a static network sits broken until an on-call engineer logs in over an out-of-band console to rewrite routes by hand.
 

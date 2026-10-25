@@ -33,7 +33,7 @@ This guide walks through the scheme Maya ended up with: a Cisco-style F3216 uSID
 
 Classic SRv6 uses a full 128-bit IPv6 address for every segment, so a five-segment path costs 80 bytes in the Segment Routing Header's segment list alone, before the SRH's own 8-byte header and the 40-byte outer IPv6 header. **Micro-SIDs (uSIDs)** pack several instructions into a single 128-bit address called a **uSID carrier**.
 
-The format Cisco IOS XR uses is **F3216**: a **32-bit uSID block** followed by **16-bit uSIDs**. That leaves $128 - 32 = 96$ bits, which is room for six uSIDs in one carrier:
+The format Cisco IOS XR uses is **F3216**: a **32-bit uSID block** followed by **16-bit uSIDs**. That leaves 128 − 32 = 96 bits, which is room for six uSIDs in one carrier:
 
 ```text
 fcbb:bb00 : 0012 : 55dc : e004 : 0000 : 0000 : 0000
@@ -50,7 +50,7 @@ Three facts about the 16-bit uSID space matter for addressing:
 | `0x0001`–`0xDFFF` | **Global IDs.** Routable node uSIDs (uN), advertised as a /48 locator. |
 | `0xE000`–`0xFFFF` | **Local IDs.** Each node allocates these for itself: adjacency SIDs (uA), VPN SIDs (uDT4/uDT6), and so on. Not routable on their own. |
 
-So a single /32 uSID block gives you $\text{0xDFFF} = 57{,}343$ globally routable node IDs. Remember that number. It's going to keep coming back.
+So a single /32 uSID block gives you `0xDFFF` = 57,343 globally routable node IDs. Remember that number. It's going to keep coming back.
 
 ## The Rules of the Road on Cisco
 
@@ -107,7 +107,7 @@ This is the plan Maya went with: a handful of large IS-IS domains, each with lot
 
 - Domains: `0x0`–`0xD` = **14 domains**
 - Nodes per domain: `0x000`–`0xFFF` = **4,096 nodes**
-- Total: $14 \times 4096 - 1 = 57{,}343$ nodes
+- Total: 14 \* 4096 - 1 = 57,343 nodes
 
 The `- 1` is the End-of-Carrier rule: domain `0`, node `000` would give uSID `0x0000`, which is reserved. So domain 0 gets 4,095 usable node IDs and every other domain gets 4,096.
 
@@ -117,7 +117,7 @@ The `- 1` is the End-of-Carrier rule: domain `0`, node `000` would give uSID `0x
 
 PE-B is node 1,500 in domain 5. It needs a locator for algo 0 and one for flex-algo 128.
 
-1. Convert the node ID to hex: $1500 = \text{0x5DC}$.
+1. Convert the node ID to hex: 1500 = `0x5DC`.
 2. Build the 16-bit uSID: `D` = `5`, `NNN` = `5DC`, so uSID = `55DC`.
 3. Algo 0 → `G` = `0`: **`fcbb:bb00:55dc::/48`**
 4. Algo 128 → `G` = `1`: **`fcbb:bb01:55dc::/48`**
@@ -134,7 +134,7 @@ You spot `fcbb:bb01:3a7f::/48` in a routing table. Read it nibble by nibble:
 | `0` | 0 | Reserved nibble, as expected |
 | `1` | G = 1 | Flex-algo 128 (low-delay plane) |
 | `3` | D = 3 | Domain 3 |
-| `a7f` | NNN = 0xA7F | Node $10 \times 256 + 7 \times 16 + 15 = 2687$ |
+| `a7f` | NNN = 0xA7F | Node 10 × 256 + 7 × 16 + 15 = 2,687 |
 
 No database lookup needed. The address tells you where the router lives.
 
@@ -142,11 +142,11 @@ No database lookup needed. The address tells you where the router lives.
 
 Every node in domain 5 on algo 0 has a locator `fcbb:bb00:5NNN::/48`. The first 36 bits are identical (32-bit block + the `D` nibble), so the whole domain collapses into one route:
 
-$$
-\texttt{fcbb:bb00:5000::/36} \;\supset\; \texttt{fcbb:bb00:5000::/48} \ldots \texttt{fcbb:bb00:5fff::/48}
-$$
+```text
+fcbb:bb00:5000::/36  covers  fcbb:bb00:5000::/48 … fcbb:bb00:5fff::/48
+```
 
-A /36 contains $2^{48-36} = 2^{12} = 4096$ /48s, which matches the 4,096 node IDs per domain exactly. With two algorithms in use, each domain border advertises just **two** prefixes into the rest of the network:
+A /36 contains 2<sup>48−36</sup> = 2<sup>12</sup> = 4,096 /48s, which matches the 4,096 node IDs per domain exactly. With two algorithms in use, each domain border advertises just **two** prefixes into the rest of the network:
 
 - `fcbb:bb00:5000::/36` (algo 0)
 - `fcbb:bb01:5000::/36` (algo 128)
@@ -186,7 +186,7 @@ fcbb:bb0G:DDNN::/48
 
 - `DD`: `0x00`–`0xDF` = **224 domains** (again stopping before `0xE0` to protect the local ID range)
 - `NN`: `0x00`–`0xFF` = **256 nodes per domain**
-- Total: $224 \times 256 - 1 = 57{,}343$ nodes per algo
+- Total: 224 × 256 − 1 = **57,343** nodes per algo
 
 Here's the interesting part: **the total is identical.** Of course it is. However you slice 16 bits, the routable space is `0x0001`–`0xDFFF`. The split doesn't create capacity. It decides **where you can summarize**.
 
@@ -203,7 +203,7 @@ Here's the interesting part: **the total is identical.** Of course it is. Howeve
 
 Node 200 in metro domain 0x2A (42), on algo 129 (`G = 2`):
 
-1. Node: $200 = \text{0xC8}$, so `NN` = `C8`.
+1. Node: 200 = `0xC8`, so `NN` = `C8`.
 2. Domain: `DD` = `2A`.
 3. uSID = `2AC8`, so the locator is **`fcbb:bb02:2ac8::/48`**.
 4. Domain summary on that plane: **`fcbb:bb02:2a00::/40`** (covers `2a00`–`2aff`, 256 /48s).

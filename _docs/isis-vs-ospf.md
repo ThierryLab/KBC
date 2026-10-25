@@ -94,7 +94,7 @@ IS-IS Area Boundaries (Boundary is ON THE LINK):
 
 ### 3. Multi-Access LAN Handling (DR vs DIS)
 
-When multiple routers share an Ethernet broadcast segment, both protocols elect a coordinator that represents the segment as a single pseudonode. That way each router advertises one link to the pseudonode instead of $N-1$ links to every neighbor. In OSPF, routers also form full adjacencies only with the DR and BDR. IS-IS routers still form adjacencies with every neighbor on the LAN, but the DIS keeps database flooding in check.
+When multiple routers share an Ethernet broadcast segment, both protocols elect a coordinator that represents the segment as a single pseudonode. That way each router advertises one link to the pseudonode instead of *N*−1 links to every neighbor. In OSPF, routers also form full adjacencies only with the DR and BDR. IS-IS routers still form adjacencies with every neighbor on the LAN, but the DIS keeps database flooding in check.
 
 - **OSPF Designated Router (DR & BDR):**
   - Elects both a DR and a Backup Designated Router (BDR).
